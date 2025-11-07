@@ -15,9 +15,19 @@ from security_scanner import SecurityScanner
 from jinja2 import Environment, FileSystemLoader
 import webbrowser
 
+def get_resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
 class SecurityScannerCLI:
     def __init__(self):
-        self.template_dir = Path(__file__).parent / "templates"
+        # Use resource path for PyInstaller compatibility
+        self.template_dir = Path(get_resource_path("templates"))
         self.output_dir = Path(".")  # Save to current directory
         self.output_dir.mkdir(exist_ok=True)
         
@@ -31,15 +41,15 @@ class SecurityScannerCLI:
         """Perform comprehensive security scan and generate report"""
         
         if verbose:
-            print(f"🔍 Starting security scan of: {url}")
-            print("=" * 60)
+            print(f"🔍 Starting security scan of: {url}", flush=True)
+            print("=" * 60, flush=True)
         
         # Initialize scanner
         scanner = SecurityScanner(url)
         
         # Perform all security checks
         if verbose:
-            print("📊 Gathering basic information...")
+            print("📊 Gathering basic information...", flush=True)
         
         results = {
             'target_url': url,
@@ -72,13 +82,13 @@ class SecurityScannerCLI:
         }
         
         if verbose:
-            print(f"🎯 Target URL: {url}")
-            print(f"🏢 Domain: {scanner.domain}")
-            print("=" * 60)
-            print("📋 SCAN PLAN:")
+            print(f"🎯 Target URL: {url}", flush=True)
+            print(f"🏢 Domain: {scanner.domain}", flush=True)
+            print("=" * 60, flush=True)
+            print("📋 SCAN PLAN:", flush=True)
             for i, (scan_key, (scan_name, _)) in enumerate(scan_functions.items(), 1):
-                print(f"  {i}. {scan_name}")
-            print("=" * 60)
+                print(f"  {i}. {scan_name}", flush=True)
+            print("=" * 60, flush=True)
         
         # Execute scans with detailed progress
         scan_count = 0
@@ -88,8 +98,8 @@ class SecurityScannerCLI:
             scan_count += 1
             
             if verbose:
-                print(f"\n[{scan_count}/{total_scans}] {scan_name}")
-                print("─" * 50)
+                print(f"\n[{scan_count}/{total_scans}] {scan_name}", flush=True)
+                print("─" * 50, flush=True)
             else:
                 print(f"[{scan_count}/{total_scans}] {scan_name}...", end=" ", flush=True)
             
@@ -97,7 +107,7 @@ class SecurityScannerCLI:
             
             try:
                 if verbose:
-                    print("  📊 Initializing scan...")
+                    print("  📊 Initializing scan...", flush=True)
                 
                 result = scan_func()
                 results['scans'][scan_key] = result
@@ -135,31 +145,31 @@ class SecurityScannerCLI:
                 issues_count = len(result.get('issues', []))
                 
                 if verbose:
-                    print(f"  ✓ Status: {status.upper()}")
-                    print(f"  📈 Checks performed: {checks}")
-                    print(f"  ⏱️  Duration: {duration:.2f}s")
+                    print(f"  ✓ Status: {status.upper()}", flush=True)
+                    print(f"  📈 Checks performed: {checks}", flush=True)
+                    print(f"  ⏱️  Duration: {duration:.2f}s", flush=True)
                     
                     if issues_count > 0:
-                        print(f"  ⚠️  Issues found: {issues_count}")
+                        print(f"  ⚠️  Issues found: {issues_count}", flush=True)
                         if critical_count > 0:
-                            print(f"     🔴 Critical: {critical_count}")
+                            print(f"     🔴 Critical: {critical_count}", flush=True)
                         if high_count > 0:
-                            print(f"     🟠 High: {high_count}")
+                            print(f"     🟠 High: {high_count}", flush=True)
                         if medium_count > 0:
-                            print(f"     🟡 Medium: {medium_count}")
+                            print(f"     🟡 Medium: {medium_count}", flush=True)
                         if low_count > 0:
-                            print(f"     🟢 Low: {low_count}")
+                            print(f"     🟢 Low: {low_count}", flush=True)
                         
                         # Show some critical issues immediately
                         critical_issues = [i for i in issues if i.get('severity') == 'critical']
                         if critical_issues:
-                            print("  🚨 Critical issues detected:")
+                            print("  🚨 Critical issues detected:", flush=True)
                             for issue in critical_issues[:3]:  # Show first 3
-                                print(f"     • {issue.get('type', 'Unknown')}: {issue.get('description', 'No description')}")
+                                print(f"     • {issue.get('type', 'Unknown')}: {issue.get('description', 'No description')}", flush=True)
                             if len(critical_issues) > 3:
-                                print(f"     ... and {len(critical_issues) - 3} more critical issues")
+                                print(f"     ... and {len(critical_issues) - 3} more critical issues", flush=True)
                     else:
-                        print(f"  ✅ No issues found")
+                        print(f"  ✅ No issues found", flush=True)
                         
                     # Show specific scan details based on scan type
                     self._show_scan_details(scan_key, result, verbose=True)
@@ -167,16 +177,16 @@ class SecurityScannerCLI:
                     # Non-verbose: just show completion status
                     status_icon = "✓" if status not in ['error', 'critical'] else "✗"
                     issues_text = f"{issues_count} issues" if issues_count > 0 else "clean"
-                    print(f"{status_icon} ({issues_text})")
+                    print(f"{status_icon} ({issues_text})", flush=True)
                     
             except Exception as e:
                 duration = (datetime.now() - start_time).total_seconds()
                 
                 if verbose:
-                    print(f"  ✗ Scan failed after {duration:.2f}s")
-                    print(f"  ❌ Error: {str(e)}")
+                    print(f"  ✗ Scan failed after {duration:.2f}s", flush=True)
+                    print(f"  ❌ Error: {str(e)}", flush=True)
                 else:
-                    print("✗ (failed)")
+                    print("✗ (failed)", flush=True)
                     
                 results['scans'][scan_key] = {
                     'error': str(e),
@@ -195,72 +205,72 @@ class SecurityScannerCLI:
         total_duration = (end_time_dt - start_time_dt).total_seconds()
         
         if verbose:
-            print("\n" + "=" * 60)
-            print(f"📈 SCAN SUMMARY")
-            print("=" * 60)
-            print(f"🎯 Target: {results['target_url']}")
-            print(f"⏱️  Total time: {total_duration:.2f} seconds")
-            print(f"🔍 Total checks: {results['scan_metadata']['total_checks']}")
-            print()
-            print("📊 SECURITY ISSUES BREAKDOWN:")
-            print(f"   🔴 Critical: {results['scan_metadata']['critical_issues']}")
-            print(f"   🟠 High:     {results['scan_metadata']['high_issues']}")
-            print(f"   🟡 Medium:   {results['scan_metadata']['medium_issues']}")
-            print(f"   🟢 Low:      {results['scan_metadata']['low_issues']}")
+            print("\n" + "=" * 60, flush=True)
+            print(f"📈 SCAN SUMMARY", flush=True)
+            print("=" * 60, flush=True)
+            print(f"🎯 Target: {results['target_url']}", flush=True)
+            print(f"⏱️  Total time: {total_duration:.2f} seconds", flush=True)
+            print(f"🔍 Total checks: {results['scan_metadata']['total_checks']}", flush=True)
+            print(flush=True)
+            print("📊 SECURITY ISSUES BREAKDOWN:", flush=True)
+            print(f"   🔴 Critical: {results['scan_metadata']['critical_issues']}", flush=True)
+            print(f"   🟠 High:     {results['scan_metadata']['high_issues']}", flush=True)
+            print(f"   🟡 Medium:   {results['scan_metadata']['medium_issues']}", flush=True)
+            print(f"   🟢 Low:      {results['scan_metadata']['low_issues']}", flush=True)
             
             total_issues = (results['scan_metadata']['critical_issues'] + 
                           results['scan_metadata']['high_issues'] + 
                           results['scan_metadata']['medium_issues'] + 
                           results['scan_metadata']['low_issues'])
             
-            print(f"   📋 Total:    {total_issues}")
+            print(f"   📋 Total:    {total_issues}", flush=True)
             
             # Security assessment
             if results['scan_metadata']['critical_issues'] > 0:
-                print("\n🚨 SECURITY ASSESSMENT: CRITICAL ISSUES DETECTED!")
-                print("   Immediate action required to address critical security vulnerabilities.")
+                print("\n🚨 SECURITY ASSESSMENT: CRITICAL ISSUES DETECTED!", flush=True)
+                print("   Immediate action required to address critical security vulnerabilities.", flush=True)
             elif results['scan_metadata']['high_issues'] > 3:
-                print("\n⚠️  SECURITY ASSESSMENT: HIGH RISK")
-                print("   Multiple high-priority security issues need attention.")
+                print("\n⚠️  SECURITY ASSESSMENT: HIGH RISK", flush=True)
+                print("   Multiple high-priority security issues need attention.", flush=True)
             elif results['scan_metadata']['high_issues'] > 0 or results['scan_metadata']['medium_issues'] > 5:
-                print("\n⚠️  SECURITY ASSESSMENT: MODERATE RISK")
-                print("   Several security improvements recommended.")
+                print("\n⚠️  SECURITY ASSESSMENT: MODERATE RISK", flush=True)
+                print("   Several security improvements recommended.", flush=True)
             elif total_issues == 0:
-                print("\n✅ SECURITY ASSESSMENT: EXCELLENT!")
-                print("   No security issues detected. Great job!")
+                print("\n✅ SECURITY ASSESSMENT: EXCELLENT!", flush=True)
+                print("   No security issues detected. Great job!", flush=True)
             else:
-                print("\n👍 SECURITY ASSESSMENT: GOOD")
-                print("   Minor security improvements available.")
-            print()
+                print("\n👍 SECURITY ASSESSMENT: GOOD", flush=True)
+                print("   Minor security improvements available.", flush=True)
+            print(flush=True)
         else:
             # Brief summary for non-verbose mode
             total_issues = (results['scan_metadata']['critical_issues'] + 
                           results['scan_metadata']['high_issues'] + 
                           results['scan_metadata']['medium_issues'] + 
                           results['scan_metadata']['low_issues'])
-            print(f"\nScan completed: {total_issues} total issues found ({total_duration:.1f}s)")
+            print(f"\nScan completed: {total_issues} total issues found ({total_duration:.1f}s)", flush=True)
         
         # Generate output
         if format == 'html':
             if verbose:
-                print("📄 Generating HTML report...")
+                print("📄 Generating HTML report...", flush=True)
             output_path = self.generate_html_report(results, output_file)
             if verbose:
-                print(f"✅ HTML report generated: {output_path}")
+                print(f"✅ HTML report generated: {output_path}", flush=True)
             
             if open_browser:
                 if verbose:
-                    print("🌐 Opening report in browser...")
+                    print("🌐 Opening report in browser...", flush=True)
                 webbrowser.open(f'file://{output_path.absolute()}')
                 if verbose:
-                    print("✅ Report opened in browser")
+                    print("✅ Report opened in browser", flush=True)
                     
         elif format == 'json':
             if verbose:
-                print("📄 Generating JSON report...")
+                print("📄 Generating JSON report...", flush=True)
             output_path = self.generate_json_report(results, output_file)
             if verbose:
-                print(f"✅ JSON report generated: {output_path}")
+                print(f"✅ JSON report generated: {output_path}", flush=True)
         
         return output_path
     
@@ -271,57 +281,57 @@ class SecurityScannerCLI:
             
         if scan_key == 'ssl_tls_analysis' and result.get('certificate_info'):
             cert_info = result['certificate_info']
-            print(f"  📜 Certificate: {cert_info.get('subject', {}).get('commonName', 'Unknown')}")
-            print(f"  🏢 Issuer: {cert_info.get('issuer', {}).get('organizationName', 'Unknown')}")
+            print(f"  📜 Certificate: {cert_info.get('subject', {}).get('commonName', 'Unknown')}", flush=True)
+            print(f"  🏢 Issuer: {cert_info.get('issuer', {}).get('organizationName', 'Unknown')}", flush=True)
             if 'expiry_days' in cert_info:
                 days = cert_info['expiry_days']
                 if days < 0:
-                    print(f"  ⚠️  Certificate EXPIRED {abs(days)} days ago!")
+                    print(f"  ⚠️  Certificate EXPIRED {abs(days)} days ago!", flush=True)
                 elif days < 30:
-                    print(f"  ⚠️  Certificate expires in {days} days")
+                    print(f"  ⚠️  Certificate expires in {days} days", flush=True)
                 else:
-                    print(f"  ✅ Certificate valid for {days} days")
+                    print(f"  ✅ Certificate valid for {days} days", flush=True)
                     
         elif scan_key == 'security_headers' and result.get('headers_present'):
             headers_count = len(result['headers_present'])
             missing_count = len(result.get('headers_missing', []))
-            print(f"  🛡️  Security headers: {headers_count} present, {missing_count} missing")
+            print(f"  🛡️  Security headers: {headers_count} present, {missing_count} missing", flush=True)
             
         elif scan_key == 'port_scanning' and result.get('open_ports'):
             open_count = len(result['open_ports'])
             if open_count > 0:
-                print(f"  🌐 Open ports found: {open_count}")
+                print(f"  🌐 Open ports found: {open_count}", flush=True)
                 risky_ports = [p for p in result['open_ports'] if p['port'] in [21, 23, 25, 135, 139, 445, 1433, 3306, 3389, 5432, 5900, 6379]]
                 if risky_ports:
-                    print(f"  ⚠️  Risky ports: {', '.join([str(p['port']) for p in risky_ports])}")
+                    print(f"  ⚠️  Risky ports: {', '.join([str(p['port']) for p in risky_ports])}", flush=True)
                     
         elif scan_key == 'dns_information' and result.get('security_features'):
             features = result['security_features']
             spf = "✅" if features.get('SPF') == 'Present' else "❌"
             dmarc = "✅" if features.get('DMARC') == 'Present' else "❌"
             dkim = "✅" if features.get('DKIM') == 'Present' else "❌"
-            print(f"  📧 Email security: SPF {spf} | DMARC {dmarc} | DKIM {dkim}")
+            print(f"  📧 Email security: SPF {spf} | DMARC {dmarc} | DKIM {dkim}", flush=True)
             
         elif scan_key == 'web_technologies' and result.get('technologies'):
             tech_count = len(result['technologies'])
-            print(f"  ⚙️  Technologies detected: {tech_count}")
+            print(f"  ⚙️  Technologies detected: {tech_count}", flush=True)
             
         elif scan_key == 'vulnerability_testing' and result.get('vulnerabilities'):
             vuln_count = len(result['vulnerabilities'])
             if vuln_count > 0:
-                print(f"  🐛 Vulnerabilities found: {vuln_count}")
+                print(f"  🐛 Vulnerabilities found: {vuln_count}", flush=True)
                 high_severity = [v for v in result['vulnerabilities'] if v.get('severity', '').lower() in ['high', 'critical']]
                 if high_severity:
-                    print(f"  🚨 High/Critical vulnerabilities: {len(high_severity)}")
+                    print(f"  🚨 High/Critical vulnerabilities: {len(high_severity)}", flush=True)
                     
         elif scan_key == 'content_security' and result.get('content_issues'):
             issues_count = len(result['content_issues'])
             if issues_count > 0:
-                print(f"  📄 Content security issues: {issues_count}")
+                print(f"  📄 Content security issues: {issues_count}", flush=True)
                 
         elif scan_key == 'network_analysis':
             if result.get('status') == 'completed':
-                print(f"  🌍 Network analysis completed")
+                print(f"  🌍 Network analysis completed", flush=True)
 
     def generate_html_report(self, results, output_file=None):
         """Generate HTML report using Jinja2 template"""
@@ -412,7 +422,7 @@ Examples:
     
     # Validate URL
     if not args.url.startswith(('http://', 'https://')):
-        print("❌ Error: URL must start with http:// or https://")
+        print("❌ Error: URL must start with http:// or https://", flush=True)
         sys.exit(1)
     
     try:
@@ -422,16 +432,16 @@ Examples:
         cli.output_dir.mkdir(exist_ok=True)
         
         if args.verbose:
-            print("🚀 WebVectors CLI")
-            print("=" * 60)
-            print(f"📅 Starting scan at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-            print(f"📂 Output directory: {cli.output_dir.absolute()}")
-            print(f"📋 Output format: {args.format.upper()}")
+            print("🚀 WebVectors CLI", flush=True)
+            print("=" * 60, flush=True)
+            print(f"📅 Starting scan at: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}", flush=True)
+            print(f"📂 Output directory: {cli.output_dir.absolute()}", flush=True)
+            print(f"📋 Output format: {args.format.upper()}", flush=True)
             if args.open:
-                print("🌐 Will open report in browser after completion")
-            print()
+                print("🌐 Will open report in browser after completion", flush=True)
+            print(flush=True)
         else:
-            print(f"🔍 Scanning {args.url}...")
+            print(f"🔍 Scanning {args.url}...", flush=True)
         
         # Perform scan
         output_path = cli.scan_website(
@@ -443,35 +453,35 @@ Examples:
         )
         
         if not args.verbose:
-            print(f"✅ Report generated: {output_path}")
+            print(f"✅ Report generated: {output_path}", flush=True)
         
         if args.verbose:
-            print("\n" + "=" * 60)
-            print("✅ SCAN COMPLETED SUCCESSFULLY!")
-            print(f"📁 Report saved to: {output_path.absolute()}")
-            print(f"� Report format: {args.format.upper()}")
+            print("\n" + "=" * 60, flush=True)
+            print("✅ SCAN COMPLETED SUCCESSFULLY!", flush=True)
+            print(f"📁 Report saved to: {output_path.absolute()}", flush=True)
+            print(f"📄 Report format: {args.format.upper()}", flush=True)
             if args.open and args.format == 'html':
-                print("🌐 Report should be opening in your browser")
-            print("=" * 60)
+                print("🌐 Report should be opening in your browser", flush=True)
+            print("=" * 60, flush=True)
             
     except KeyboardInterrupt:
-        print("\n\n🛑 SCAN INTERRUPTED")
-        print("=" * 40)
-        print("❌ Scan was cancelled by user (Ctrl+C)")
-        print("💡 Tip: Use --verbose flag for detailed progress")
+        print("\n\n🛑 SCAN INTERRUPTED", flush=True)
+        print("=" * 40, flush=True)
+        print("❌ Scan was cancelled by user (Ctrl+C)", flush=True)
+        print("💡 Tip: Use --verbose flag for detailed progress", flush=True)
         sys.exit(1)
     except Exception as e:
-        print(f"\n\n💥 SCAN FAILED")
-        print("=" * 40)
-        print(f"❌ Error: {e}")
-        print("\n💡 Troubleshooting tips:")
-        print("   • Check that the URL is valid and accessible")
-        print("   • Ensure you have an internet connection")
-        print("   • Try running with --verbose for more details")
-        print("   • Check if the target server is blocking requests")
+        print(f"\n\n💥 SCAN FAILED", flush=True)
+        print("=" * 40, flush=True)
+        print(f"❌ Error: {e}", flush=True)
+        print("\n💡 Troubleshooting tips:", flush=True)
+        print("   • Check that the URL is valid and accessible", flush=True)
+        print("   • Ensure you have an internet connection", flush=True)
+        print("   • Try running with --verbose for more details", flush=True)
+        print("   • Check if the target server is blocking requests", flush=True)
         
         if args.verbose:
-            print("\n📋 Full error details:")
+            print("\n📋 Full error details:", flush=True)
             import traceback
             traceback.print_exc()
         sys.exit(1)

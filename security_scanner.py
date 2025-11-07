@@ -521,14 +521,25 @@ class SecurityScanner:
                 'key_bits': key_bits,
                 'security_level': 'unknown',
                 'forward_secrecy': False,
-                'aead_cipher': False
+                'aead_cipher': False,
+                'cipher_details': self._get_cipher_details(cipher_suite),
+                'key_exchange': self._extract_key_exchange(cipher_suite),
+                'authentication': self._extract_authentication(cipher_suite),
+                'encryption': self._extract_encryption_algorithm(cipher_suite),
+                'mac_algorithm': self._extract_mac_algorithm(cipher_suite),
+                'cipher_strength': self._evaluate_cipher_strength(cipher_suite, key_bits),
+                'nist_approved': self._check_nist_approval(cipher_suite),
+                'deprecation_status': self._check_deprecation_status(cipher_suite, tls_version)
             }
+            
+            # Enhanced protocol version analysis
+            result['protocol_details'] = self._analyze_protocol_version(tls_version)
             
             # Modern cipher security analysis
             cipher_lower = cipher_suite.lower()
             
             # Check for weak/broken ciphers
-            weak_ciphers = ['rc4', 'des', 'md5', 'null', 'export', 'anon']
+            weak_ciphers = ['rc4', 'des', 'md5', 'null', 'export', 'anon', '3des']
             for weak in weak_ciphers:
                 if weak in cipher_lower:
                     result['ssl_issues'].append(f'Weak/broken cipher component: {weak.upper()}')
@@ -577,6 +588,478 @@ class SecurityScanner:
             result['ssl_issues'].append(f'Cipher analysis error: {str(e)}')
         
         return result
+    
+    def _get_cipher_details(self, cipher_suite: str) -> Dict[str, Any]:
+        """Extract detailed information about the cipher suite"""
+        details = {
+            'name': cipher_suite,
+            'category': 'unknown',
+            'year_introduced': 'unknown',
+            'recommended_use': 'unknown',
+            'security_notes': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        # Categorize cipher suites
+        if 'ecdhe' in cipher_lower and 'aes' in cipher_lower and 'gcm' in cipher_lower:
+            details['category'] = 'Modern AEAD'
+            details['recommended_use'] = 'Recommended for all applications'
+            details['security_notes'].append('Provides perfect forward secrecy and authenticated encryption')
+        elif 'chacha20' in cipher_lower and 'poly1305' in cipher_lower:
+            details['category'] = 'Modern Stream Cipher'
+            details['recommended_use'] = 'Excellent for mobile/IoT devices'
+            details['security_notes'].append('Optimized for software implementations')
+        elif 'ecdhe' in cipher_lower and 'aes' in cipher_lower:
+            details['category'] = 'Modern with Forward Secrecy'
+            details['recommended_use'] = 'Good for most applications'
+            details['security_notes'].append('Provides forward secrecy')
+        elif 'rsa' in cipher_lower and 'aes' in cipher_lower:
+            details['category'] = 'Traditional RSA'
+            details['recommended_use'] = 'Legacy compatibility only'
+            details['security_notes'].append('No forward secrecy')
+        elif any(weak in cipher_lower for weak in ['rc4', 'des', 'md5', '3des']):
+            details['category'] = 'Legacy/Weak'
+            details['recommended_use'] = 'Not recommended - security risks'
+            details['security_notes'].append('Contains weak cryptographic components')
+        
+        return details
+    
+    def _extract_key_exchange(self, cipher_suite: str) -> Dict[str, Any]:
+        """Extract key exchange algorithm details"""
+        key_exchange = {
+            'algorithm': 'unknown',
+            'type': 'unknown',
+            'forward_secrecy': False,
+            'strength': 'unknown',
+            'notes': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        if 'ecdhe' in cipher_lower:
+            key_exchange['algorithm'] = 'ECDHE'
+            key_exchange['type'] = 'Elliptic Curve Diffie-Hellman Ephemeral'
+            key_exchange['forward_secrecy'] = True
+            key_exchange['strength'] = 'Strong'
+            key_exchange['notes'].append('Provides perfect forward secrecy')
+            key_exchange['notes'].append('Efficient elliptic curve cryptography')
+        elif 'dhe' in cipher_lower:
+            key_exchange['algorithm'] = 'DHE'
+            key_exchange['type'] = 'Diffie-Hellman Ephemeral'
+            key_exchange['forward_secrecy'] = True
+            key_exchange['strength'] = 'Good'
+            key_exchange['notes'].append('Provides perfect forward secrecy')
+            key_exchange['notes'].append('May be slower than ECDHE')
+        elif 'rsa' in cipher_lower:
+            key_exchange['algorithm'] = 'RSA'
+            key_exchange['type'] = 'RSA Key Transport'
+            key_exchange['forward_secrecy'] = False
+            key_exchange['strength'] = 'Moderate'
+            key_exchange['notes'].append('No forward secrecy')
+            key_exchange['notes'].append('Legacy algorithm')
+        
+        return key_exchange
+    
+    def _extract_authentication(self, cipher_suite: str) -> Dict[str, Any]:
+        """Extract authentication algorithm details"""
+        auth = {
+            'algorithm': 'unknown',
+            'type': 'unknown',
+            'key_size': 'unknown',
+            'strength': 'unknown'
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        if 'ecdsa' in cipher_lower:
+            auth['algorithm'] = 'ECDSA'
+            auth['type'] = 'Elliptic Curve Digital Signature'
+            auth['strength'] = 'Strong'
+        elif 'rsa' in cipher_lower:
+            auth['algorithm'] = 'RSA'
+            auth['type'] = 'RSA Digital Signature'
+            auth['strength'] = 'Good'
+        elif 'dss' in cipher_lower:
+            auth['algorithm'] = 'DSS'
+            auth['type'] = 'Digital Signature Standard'
+            auth['strength'] = 'Moderate'
+        
+        return auth
+    
+    def _extract_encryption_algorithm(self, cipher_suite: str) -> Dict[str, Any]:
+        """Extract encryption algorithm details"""
+        encryption = {
+            'algorithm': 'unknown',
+            'mode': 'unknown',
+            'key_size': 'unknown',
+            'block_size': 'unknown',
+            'type': 'unknown',
+            'strength': 'unknown',
+            'notes': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        if 'chacha20' in cipher_lower:
+            encryption['algorithm'] = 'ChaCha20'
+            encryption['type'] = 'Stream Cipher'
+            encryption['key_size'] = '256 bits'
+            encryption['strength'] = 'Excellent'
+            encryption['notes'].append('Modern stream cipher')
+            encryption['notes'].append('Resistant to timing attacks')
+        elif 'aes256' in cipher_lower or 'aes_256' in cipher_lower:
+            encryption['algorithm'] = 'AES'
+            encryption['key_size'] = '256 bits'
+            encryption['type'] = 'Block Cipher'
+            encryption['block_size'] = '128 bits'
+            encryption['strength'] = 'Excellent'
+            if 'gcm' in cipher_lower:
+                encryption['mode'] = 'GCM'
+                encryption['notes'].append('Authenticated encryption mode')
+            elif 'cbc' in cipher_lower:
+                encryption['mode'] = 'CBC'
+                encryption['notes'].append('Traditional block cipher mode')
+        elif 'aes128' in cipher_lower or 'aes_128' in cipher_lower:
+            encryption['algorithm'] = 'AES'
+            encryption['key_size'] = '128 bits'
+            encryption['type'] = 'Block Cipher'
+            encryption['block_size'] = '128 bits'
+            encryption['strength'] = 'Strong'
+            if 'gcm' in cipher_lower:
+                encryption['mode'] = 'GCM'
+                encryption['notes'].append('Authenticated encryption mode')
+        elif '3des' in cipher_lower:
+            encryption['algorithm'] = '3DES'
+            encryption['key_size'] = '168 bits (effective 112 bits)'
+            encryption['type'] = 'Block Cipher'
+            encryption['strength'] = 'Weak'
+            encryption['notes'].append('Legacy cipher - should be replaced')
+        elif 'rc4' in cipher_lower:
+            encryption['algorithm'] = 'RC4'
+            encryption['type'] = 'Stream Cipher'
+            encryption['strength'] = 'Broken'
+            encryption['notes'].append('Cryptographically broken - do not use')
+        
+        return encryption
+    
+    def _extract_mac_algorithm(self, cipher_suite: str) -> Dict[str, Any]:
+        """Extract MAC algorithm details"""
+        mac = {
+            'algorithm': 'unknown',
+            'type': 'unknown',
+            'hash_size': 'unknown',
+            'strength': 'unknown',
+            'notes': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        if 'poly1305' in cipher_lower:
+            mac['algorithm'] = 'Poly1305'
+            mac['type'] = 'One-time authenticator'
+            mac['strength'] = 'Excellent'
+            mac['notes'].append('Used with ChaCha20 stream cipher')
+        elif 'gcm' in cipher_lower:
+            mac['algorithm'] = 'GCM'
+            mac['type'] = 'Galois/Counter Mode authentication'
+            mac['strength'] = 'Excellent'
+            mac['notes'].append('Provides authenticated encryption')
+        elif 'sha384' in cipher_lower:
+            mac['algorithm'] = 'HMAC-SHA384'
+            mac['type'] = 'Hash-based Message Authentication Code'
+            mac['hash_size'] = '384 bits'
+            mac['strength'] = 'Excellent'
+        elif 'sha256' in cipher_lower:
+            mac['algorithm'] = 'HMAC-SHA256'
+            mac['type'] = 'Hash-based Message Authentication Code'
+            mac['hash_size'] = '256 bits'
+            mac['strength'] = 'Strong'
+        elif 'sha' in cipher_lower:
+            mac['algorithm'] = 'HMAC-SHA1'
+            mac['type'] = 'Hash-based Message Authentication Code'
+            mac['hash_size'] = '160 bits'
+            mac['strength'] = 'Moderate'
+            mac['notes'].append('SHA-1 is being phased out')
+        elif 'md5' in cipher_lower:
+            mac['algorithm'] = 'HMAC-MD5'
+            mac['type'] = 'Hash-based Message Authentication Code'
+            mac['hash_size'] = '128 bits'
+            mac['strength'] = 'Broken'
+            mac['notes'].append('MD5 is cryptographically broken')
+        
+        return mac
+    
+    def _evaluate_cipher_strength(self, cipher_suite: str, key_bits: Any) -> Dict[str, Any]:
+        """Evaluate overall cipher strength"""
+        strength = {
+            'overall_rating': 'unknown',
+            'key_strength': 'unknown',
+            'algorithm_strength': 'unknown',
+            'future_proof': False,
+            'quantum_resistant': False,
+            'score': 0,
+            'recommendations': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        # Evaluate key strength
+        try:
+            if isinstance(key_bits, (int, str)) and str(key_bits).isdigit():
+                bits = int(key_bits)
+                if bits >= 256:
+                    strength['key_strength'] = 'Excellent'
+                    strength['score'] += 30
+                elif bits >= 192:
+                    strength['key_strength'] = 'Strong'
+                    strength['score'] += 25
+                elif bits >= 128:
+                    strength['key_strength'] = 'Good'
+                    strength['score'] += 20
+                elif bits >= 112:
+                    strength['key_strength'] = 'Acceptable'
+                    strength['score'] += 15
+                else:
+                    strength['key_strength'] = 'Weak'
+                    strength['score'] += 5
+        except:
+            pass
+        
+        # Evaluate algorithm strength
+        if 'chacha20' in cipher_lower and 'poly1305' in cipher_lower:
+            strength['algorithm_strength'] = 'Excellent'
+            strength['future_proof'] = True
+            strength['score'] += 35
+        elif 'aes' in cipher_lower and 'gcm' in cipher_lower:
+            strength['algorithm_strength'] = 'Excellent'
+            strength['future_proof'] = True
+            strength['score'] += 35
+        elif 'aes' in cipher_lower:
+            strength['algorithm_strength'] = 'Strong'
+            strength['score'] += 25
+        elif '3des' in cipher_lower:
+            strength['algorithm_strength'] = 'Weak'
+            strength['score'] += 10
+            strength['recommendations'].append('Upgrade from 3DES to AES')
+        elif 'rc4' in cipher_lower:
+            strength['algorithm_strength'] = 'Broken'
+            strength['score'] += 0
+            strength['recommendations'].append('Replace RC4 immediately - security risk')
+        
+        # Check for forward secrecy
+        if any(fs in cipher_lower for fs in ['ecdhe', 'dhe']):
+            strength['score'] += 20
+            strength['recommendations'].append('Good: Forward secrecy enabled')
+        else:
+            strength['recommendations'].append('Consider enabling forward secrecy with ECDHE')
+        
+        # Determine overall rating
+        if strength['score'] >= 80:
+            strength['overall_rating'] = 'Excellent'
+        elif strength['score'] >= 60:
+            strength['overall_rating'] = 'Good'
+        elif strength['score'] >= 40:
+            strength['overall_rating'] = 'Acceptable'
+        elif strength['score'] >= 20:
+            strength['overall_rating'] = 'Weak'
+        else:
+            strength['overall_rating'] = 'Poor'
+        
+        return strength
+    
+    def _check_nist_approval(self, cipher_suite: str) -> Dict[str, Any]:
+        """Check NIST approval status"""
+        nist = {
+            'approved': False,
+            'category': 'unknown',
+            'notes': [],
+            'compliance': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        # NIST approved algorithms
+        if 'aes' in cipher_lower:
+            nist['approved'] = True
+            nist['category'] = 'FIPS 140-2 Approved'
+            nist['compliance'].append('FIPS 140-2')
+            nist['notes'].append('AES is NIST approved symmetric encryption')
+        
+        if 'ecdhe' in cipher_lower:
+            nist['approved'] = True
+            nist['compliance'].append('NIST SP 800-57')
+            nist['notes'].append('ECDHE provides approved key exchange')
+        
+        if 'sha256' in cipher_lower or 'sha384' in cipher_lower:
+            nist['approved'] = True
+            nist['compliance'].append('FIPS 180-4')
+            nist['notes'].append('SHA-2 family is NIST approved')
+        
+        if 'gcm' in cipher_lower:
+            nist['approved'] = True
+            nist['compliance'].append('NIST SP 800-38D')
+            nist['notes'].append('GCM is NIST approved authentication mode')
+        
+        # Non-approved or deprecated
+        if any(weak in cipher_lower for weak in ['rc4', 'md5', 'sha1', 'des']):
+            nist['approved'] = False
+            nist['category'] = 'Deprecated/Not Approved'
+            nist['notes'].append('Contains deprecated cryptographic components')
+        
+        return nist
+    
+    def _check_deprecation_status(self, cipher_suite: str, tls_version: str) -> Dict[str, Any]:
+        """Check deprecation status of cipher and protocol"""
+        deprecation = {
+            'cipher_deprecated': False,
+            'protocol_deprecated': False,
+            'deprecation_date': None,
+            'replacement_recommended': None,
+            'urgency': 'none',
+            'warnings': []
+        }
+        
+        cipher_lower = cipher_suite.lower()
+        
+        # Check protocol deprecation
+        if tls_version in ['TLSv1', 'TLSv1.0']:
+            deprecation['protocol_deprecated'] = True
+            deprecation['deprecation_date'] = '2021'
+            deprecation['urgency'] = 'critical'
+            deprecation['replacement_recommended'] = 'TLS 1.2 or 1.3'
+            deprecation['warnings'].append('TLS 1.0 is deprecated and should not be used')
+        elif tls_version in ['TLSv1.1']:
+            deprecation['protocol_deprecated'] = True
+            deprecation['deprecation_date'] = '2021'
+            deprecation['urgency'] = 'critical'
+            deprecation['replacement_recommended'] = 'TLS 1.2 or 1.3'
+            deprecation['warnings'].append('TLS 1.1 is deprecated and should not be used')
+        
+        # Check cipher deprecation
+        if 'rc4' in cipher_lower:
+            deprecation['cipher_deprecated'] = True
+            deprecation['deprecation_date'] = '2015'
+            deprecation['urgency'] = 'critical'
+            deprecation['replacement_recommended'] = 'AES-GCM or ChaCha20-Poly1305'
+            deprecation['warnings'].append('RC4 is broken and must be replaced immediately')
+        elif '3des' in cipher_lower:
+            deprecation['cipher_deprecated'] = True
+            deprecation['deprecation_date'] = '2019'
+            deprecation['urgency'] = 'high'
+            deprecation['replacement_recommended'] = 'AES-256'
+            deprecation['warnings'].append('3DES is deprecated due to security concerns')
+        elif 'md5' in cipher_lower:
+            deprecation['cipher_deprecated'] = True
+            deprecation['deprecation_date'] = '2012'
+            deprecation['urgency'] = 'critical'
+            deprecation['replacement_recommended'] = 'SHA-256 or SHA-384'
+            deprecation['warnings'].append('MD5 is cryptographically broken')
+        elif 'sha1' in cipher_lower or 'sha-1' in cipher_lower:
+            deprecation['cipher_deprecated'] = True
+            deprecation['deprecation_date'] = '2020'
+            deprecation['urgency'] = 'medium'
+            deprecation['replacement_recommended'] = 'SHA-256 or SHA-384'
+            deprecation['warnings'].append('SHA-1 is being phased out')
+        
+        return deprecation
+    
+    def _analyze_protocol_version(self, tls_version: str) -> Dict[str, Any]:
+        """Analyze TLS protocol version details"""
+        protocol = {
+            'version': tls_version,
+            'release_year': 'unknown',
+            'status': 'unknown',
+            'features': [],
+            'security_improvements': [],
+            'performance_benefits': [],
+            'compatibility': 'unknown',
+            'recommendation': 'unknown'
+        }
+        
+        if tls_version == 'TLSv1.3':
+            protocol.update({
+                'release_year': '2018',
+                'status': 'Current',
+                'features': [
+                    '0-RTT resumption',
+                    'Simplified handshake',
+                    'Forward secrecy by default',
+                    'Authenticated encryption only',
+                    'Removed legacy algorithms'
+                ],
+                'security_improvements': [
+                    'Perfect forward secrecy mandatory',
+                    'No compression to prevent CRIME attacks',
+                    'Encrypted handshake messages',
+                    'Post-handshake authentication'
+                ],
+                'performance_benefits': [
+                    'Reduced handshake latency',
+                    '0-RTT data transmission',
+                    'Simplified state machine'
+                ],
+                'compatibility': 'Modern browsers and servers',
+                'recommendation': 'Highly recommended - use when possible'
+            })
+        elif tls_version == 'TLSv1.2':
+            protocol.update({
+                'release_year': '2008',
+                'status': 'Current',
+                'features': [
+                    'AEAD cipher suites',
+                    'Configurable hash/signature algorithms',
+                    'Extension support',
+                    'Authenticated encryption'
+                ],
+                'security_improvements': [
+                    'SHA-256 support',
+                    'AEAD ciphers',
+                    'Explicit IV for CBC',
+                    'Configurable signature algorithms'
+                ],
+                'performance_benefits': [
+                    'Efficient AEAD encryption',
+                    'Reduced computational overhead',
+                    'Better cipher suite selection'
+                ],
+                'compatibility': 'Universal support',
+                'recommendation': 'Recommended minimum version'
+            })
+        elif tls_version == 'TLSv1.1':
+            protocol.update({
+                'release_year': '2006',
+                'status': 'Deprecated',
+                'features': [
+                    'Explicit IV for CBC',
+                    'Protection against CBC attacks',
+                    'IANA cipher suite registry'
+                ],
+                'security_improvements': [
+                    'CBC attack mitigation',
+                    'Explicit initialization vectors'
+                ],
+                'compatibility': 'Legacy systems only',
+                'recommendation': 'Not recommended - upgrade to TLS 1.2+'
+            })
+        elif tls_version in ['TLSv1', 'TLSv1.0']:
+            protocol.update({
+                'release_year': '1999',
+                'status': 'Deprecated',
+                'features': [
+                    'Basic SSL/TLS functionality',
+                    'Certificate-based authentication',
+                    'Symmetric encryption'
+                ],
+                'security_improvements': [
+                    'Improved from SSL 3.0',
+                    'HMAC instead of MAC'
+                ],
+                'compatibility': 'Legacy systems only',
+                'recommendation': 'Not recommended - serious security risks'
+            })
+        
+        return protocol
     
     def _check_ssl_vulnerabilities(self, result: Dict[str, Any]) -> Dict[str, Any]:
         """Check for known SSL/TLS vulnerabilities"""
@@ -1443,7 +1926,7 @@ class SecurityScanner:
             # Test GET parameters
             for payload in payloads:
                 test_url = f"{self.target_url}?id={payload}&search={payload}"
-                response = requests.get(test_url, timeout=10)
+                response = requests.get(test_url, timeout=5)
                 
                 for pattern in error_patterns:
                     if re.search(pattern, response.text.lower()):
@@ -1467,7 +1950,7 @@ class SecurityScanner:
             # Test POST parameters
             post_data = {'username': payloads[0], 'password': payloads[1]}
             try:
-                response = requests.post(self.target_url, data=post_data, timeout=10)
+                response = requests.post(self.target_url, data=post_data, timeout=5)
                 for pattern in error_patterns:
                     if re.search(pattern, response.text.lower()):
                         result['vulnerabilities'].append({
@@ -1503,7 +1986,7 @@ class SecurityScanner:
         try:
             for payload in xss_payloads:
                 test_url = f"{self.target_url}?q={payload}"
-                response = requests.get(test_url, timeout=10)
+                response = requests.get(test_url, timeout=5)
                 
                 if payload in response.text and 'text/html' in response.headers.get('content-type', ''):
                     result['vulnerabilities'].append({
@@ -1544,7 +2027,7 @@ class SecurityScanner:
         try:
             for payload in traversal_payloads:
                 test_url = f"{self.target_url}?file={payload}"
-                response = requests.get(test_url, timeout=10)
+                response = requests.get(test_url, timeout=5)
                 
                 # Check for common indicators of successful directory traversal
                 indicators = ['root:', 'daemon:', 'bin:', 'sys:', '[boot loader]', 'Windows Registry']
@@ -1571,7 +2054,7 @@ class SecurityScanner:
             pass
     
     def _test_sensitive_files_comprehensive(self, result: Dict[str, Any]):
-        """Comprehensive sensitive files testing"""
+        """Comprehensive sensitive files testing with parallel requests"""
         result['tests_performed'].append('Sensitive Files Discovery (Comprehensive)')
         result['checks_performed'] += 1
         
@@ -1599,10 +2082,11 @@ class SecurityScanner:
             "/docker-compose.yml"
         ]
         
-        try:
-            for file_path in sensitive_files:
+        def check_file(file_path):
+            """Check a single file for accessibility"""
+            try:
                 test_url = f"{self.target_url.rstrip('/')}{file_path}"
-                response = requests.get(test_url, timeout=10)
+                response = requests.get(test_url, timeout=5)
                 
                 if response.status_code == 200 and len(response.content) > 0:
                     # Additional checks for actual content vs default pages
@@ -1610,21 +2094,34 @@ class SecurityScanner:
                     if not any(phrase in content for phrase in ['not found', '404', 'error', 'forbidden']):
                         severity = 'Critical' if file_path in ['/.env', '/config.php', '/wp-config.php', '/database.yml'] else 'Medium'
                         
-                        result['vulnerabilities'].append({
+                        return {
                             'type': 'Sensitive File Exposure',
                             'severity': severity,
                             'description': f'Sensitive file accessible: {file_path}',
                             'file_path': file_path,
                             'url': test_url,
                             'size': len(response.content)
-                        })
-                        result['issues'].append({
+                        }, {
                             'type': 'Exposed Sensitive File',
                             'severity': severity.lower(),
                             'description': f'Sensitive file {file_path} is publicly accessible',
                             'impact': 'Information disclosure, potential credential exposure',
                             'remediation': 'Restrict access to sensitive files and directories'
-                        })
+                        }
+            except Exception:
+                pass
+            return None, None
+        
+        try:
+            # Use thread pool to check files in parallel
+            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+                futures = {executor.submit(check_file, file_path): file_path for file_path in sensitive_files}
+                
+                for future in concurrent.futures.as_completed(futures):
+                    vuln, issue = future.result()
+                    if vuln:
+                        result['vulnerabilities'].append(vuln)
+                        result['issues'].append(issue)
                         
         except Exception:
             pass
@@ -1638,7 +2135,7 @@ class SecurityScanner:
         
         try:
             for method in dangerous_methods:
-                response = requests.request(method, self.target_url, timeout=10)
+                response = requests.request(method, self.target_url, timeout=5)
                 if response.status_code not in [404, 405, 501]:
                     result['vulnerabilities'].append({
                         'type': 'Dangerous HTTP Method',
@@ -1680,7 +2177,7 @@ class SecurityScanner:
                 test_url = f"{self.target_url.rstrip('/')}{test['path']}"
                 headers = test.get('headers', {})
                 
-                response = requests.get(test_url, headers=headers, timeout=10, allow_redirects=False)
+                response = requests.get(test_url, headers=headers, timeout=5, allow_redirects=False)
                 
                 # Check for potential bypasses
                 if response.status_code == 200:
@@ -1732,7 +2229,7 @@ class SecurityScanner:
         result['checks_performed'] += 1
         
         try:
-            response = requests.get(self.target_url, timeout=10)
+            response = requests.get(self.target_url, timeout=5)
             
             for cookie_header in response.headers.get_list('Set-Cookie') or []:
                 cookie_issues = []
@@ -1770,7 +2267,7 @@ class SecurityScanner:
         
         try:
             headers = {'Origin': 'https://evil.com'}
-            response = requests.get(self.target_url, headers=headers, timeout=10)
+            response = requests.get(self.target_url, headers=headers, timeout=5)
             
             cors_headers = {
                 'Access-Control-Allow-Origin': response.headers.get('Access-Control-Allow-Origin'),

@@ -226,3 +226,10 @@ wsgi.py
 # Environment specific files
 .env.production
 .env.local
+
+# PyInstaller build artifacts
+build/
+dist/
+*.spec
+webvectors.spec
+build_exe.py

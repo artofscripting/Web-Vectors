@@ -4,7 +4,13 @@ A comprehensive Python-based website security scanner with both CLI and web inte
 
 ![Security Scanner](https://img.shields.io/badge/Security-Scanner-blue) ![Python](https://img.shields.io/badge/Python-3.7+-green) ![Flask](https://img.shields.io/badge/Flask-2.3+-orange) ![Version](https://img.shields.io/badge/Version-2.0-brightgreen) ![Database](https://img.shields.io/badge/Database-SQLite-lightblue)
 
-## 🚀 Enhanced Features (v2.0)
+## � Screenshot
+
+![WebVectors Security Report](assets/Screenshot.png)
+
+*Comprehensive security analysis with detailed SSL/TLS inspection, vulnerability testing, and compliance checking*
+
+## �🚀 Enhanced Features (v2.0)
 
 ### Core Security Analysis
 - **Comprehensive SSL/TLS Analysis**: Certificate validation, cipher analysis, protocol security
@@ -159,6 +165,36 @@ A comprehensive Python-based website security scanner with both CLI and web inte
    ```bash
    python app.py
    ```
+
+### Building Standalone Executable
+
+To create a standalone executable that doesn't require Python installation:
+
+1. **Install PyInstaller:**
+   ```bash
+   pip install pyinstaller
+   ```
+
+2. **Build the executable:**
+   ```bash
+   pyinstaller webvectors.spec
+   ```
+
+3. **Find the executable:**
+   ```
+   dist/WebVectors.exe  (Windows)
+   ```
+
+4. **Use the launcher script (Windows):**
+   ```bash
+   webvectors.bat https://example.com
+   ```
+
+The executable includes:
+- All Python dependencies bundled
+- HTML report templates embedded
+- Custom WebVectors icon
+- No Python installation required
 
 ### Production Deployment
 

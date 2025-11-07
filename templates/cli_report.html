@@ -8,122 +8,124 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: radial-gradient(ellipse at center, #1e3c72 0%, #2a5298 30%, #1a1a2e 70%, #000000 100%);
+            background: linear-gradient(180deg, #000814 0%, #001d3d 30%, #000814 70%, #000000 100%);
             min-height: 100vh;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #ffffff;
         }
         .header-section {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%);
-            color: white;
+            background: linear-gradient(135deg, #001d3d 0%, #003566 50%, #001d3d 100%);
+            color: #ffffff;
             padding: 2rem 0;
             margin-bottom: 2rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #003566;
             border-radius: 15px;
+            box-shadow: 0 0 20px rgba(79, 195, 247, 0.3);
         }
         .scan-summary {
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #001d3d 0%, #000814 100%);
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(79, 195, 247, 0.2);
+            border: 1px solid #000000;
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
         .scan-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #001d3d 0%, #000814 100%);
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(79, 195, 247, 0.15);
+            border: 1px solid #000000;
             margin-bottom: 1.5rem;
             transition: all 0.3s ease;
             color: #ffffff;
         }
         .scan-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 12px 40px rgba(79, 195, 247, 0.4);
+            border: 1px solid #003566;
         }
-        .status-excellent { color: #28a745; }
-        .status-good { color: #17a2b8; }
-        .status-moderate { color: #ffc107; }
-        .status-poor { color: #dc3545; }
-        .status-critical { color: #dc3545; font-weight: bold; }
+        .status-excellent { color: #00ff00; }
+        .status-good { color: #00ff00; }
+        .status-moderate { color: #ffc300; }
+        .status-poor { color: #ff0000; }
+        .status-critical { color: #ff0000; font-weight: bold; }
         .metric-card {
             text-align: center;
             padding: 1rem;
             border-radius: 12px;
             margin-bottom: 1rem;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #000000;
             transition: all 0.3s ease;
+            background: #000814;
         }
         .metric-card:hover {
             transform: scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 25px rgba(79, 195, 247, 0.5);
+            border-color: #003566;
         }
         .metric-critical { 
-            background: linear-gradient(135deg, rgba(220, 53, 69, 0.8), rgba(255, 0, 0, 0.6)); 
-            border: 1px solid rgba(220, 53, 69, 0.9);
+            background: linear-gradient(135deg, #660000 0%, #330000 100%);
+            border: 1px solid #ff0000;
+            color: #ffffff;
         }
         .metric-high { 
-            background: linear-gradient(135deg, rgba(255, 193, 7, 0.8), rgba(255, 140, 0, 0.6)); 
-            border: 1px solid rgba(255, 193, 7, 0.9);
-            color: #000;
+            background: linear-gradient(135deg, #665200 0%, #332900 100%);
+            border: 1px solid #ffc300;
+            color: #ffc300;
         }
         .metric-medium { 
-            background: linear-gradient(135deg, rgba(23, 162, 184, 0.8), rgba(0, 123, 255, 0.6)); 
-            border: 1px solid rgba(23, 162, 184, 0.9);
+            background: linear-gradient(135deg, #003566 0%, #001d3d 100%);
+            border: 1px solid #003566;
+            color: #ffffff;
         }
         .metric-low { 
-            background: linear-gradient(135deg, rgba(40, 167, 69, 0.8), rgba(0, 255, 127, 0.6)); 
-            border: 1px solid rgba(40, 167, 69, 0.9);
+            background: linear-gradient(135deg, #004d00 0%, #002600 100%);
+            border: 1px solid #00ff00;
+            color: #ffffff;
         }
         .issue-accordion .accordion-button {
             font-size: 0.95rem;
-            background: rgba(255, 255, 255, 0.9);
-            color: #000000;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #001d3d;
+            color: #ffffff;
+            border: 1px solid #000000;
         }
         .issue-accordion .accordion-button:not(.collapsed) {
-            background: rgba(102, 126, 234, 0.8);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            color: #ffffff;
+            background: #003566;
+            box-shadow: 0 4px 8px rgba(79, 195, 247, 0.3);
+            color: #81d4fa;
+            border-color: #003566;
         }
         .issue-accordion .accordion-body {
-            background: rgba(255, 255, 255, 0.95);
-            color: #000000;
+            background: #000814;
+            color: #ffffff;
+            border: 1px solid #000000;
         }
         .code-block {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #000000;
+            border: 1px solid #000000;
             border-radius: 8px;
             padding: 0.75rem;
             font-family: 'Courier New', monospace;
             font-size: 0.85rem;
-            color: #00ff88;
+            color: #81d4fa;
         }
         @media print {
             .no-print { display: none !important; }
             .scan-card { break-inside: avoid; }
         }
         .footer-info {
-            background: linear-gradient(135deg, rgba(52, 58, 64, 0.9), rgba(0, 0, 0, 0.9));
-            color: white;
+            background: linear-gradient(135deg, #001d3d 0%, #000814 100%);
+            color: #ffffff;
             padding: 2rem 0;
             margin-top: 3rem;
-            backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-top: 1px solid #000000;
         }
         .nav-tabs {
-            background: rgba(255, 255, 255, 0.1);
+            background: #001d3d;
             border-radius: 15px;
             padding: 0.5rem;
             margin-bottom: 1rem;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #000000;
         }
         .nav-tabs .nav-link {
             color: #ffffff;
@@ -134,48 +136,137 @@
             transition: all 0.3s ease;
         }
         .nav-tabs .nav-link:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.2);
+            color: #81d4fa;
+            background: rgba(79, 195, 247, 0.2);
             transform: translateY(-2px);
         }
         .nav-tabs .nav-link.active {
-            color: #ffffff;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #000000;
+            background: #4fc3f7;
             border: none;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 4px 15px rgba(79, 195, 247, 0.4);
+            font-weight: bold;
         }
         .tab-content {
-            background: rgba(255, 255, 255, 0.05);
+            background: #000814;
             border-radius: 15px;
             padding: 1.5rem;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #000000;
         }
         .table {
             color: #ffffff;
         }
         .table th {
-            border-color: rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.1);
+            border-color: #003566;
+            background: #001d3d;
+            color: #81d4fa;
+            font-weight: bold;
         }
         .table td {
-            border-color: rgba(255, 255, 255, 0.1);
+            border-color: #001d3d;
         }
         .table-responsive {
-            background: rgba(255, 255, 255, 0.05);
+            background: #000814;
             border-radius: 15px;
             padding: 1rem;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #000000;
             margin-bottom: 1rem;
         }
         .alert {
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid #000000;
+            color: #ffffff;
+        }
+        .alert-success {
+            background: #004d00;
+            border-color: #00ff00;
+        }
+        .alert-info {
+            background: #001d3d;
+            border-color: #0077b6;
+        }
+        .alert-warning {
+            background: #665200;
+            border-color: #ffc300;
+        }
+        .alert-danger {
+            background: #660000;
+            border-color: #ff0000;
+        }
+        .alert-light {
+            background: #001d3d;
+            border-color: #4fc3f7;
         }
         .progress {
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #000000;
+            border: 1px solid #4fc3f7;
+        }
+        .badge {
+            font-weight: bold;
+        }
+        .bg-success {
+            background-color: #00ff00 !important;
+            color: #000000 !important;
+        }
+        .bg-info {
+            background-color: #0077b6 !important;
+            color: #ffffff !important;
+        }
+        .bg-warning {
+            background-color: #ffc300 !important;
+            color: #000000 !important;
+        }
+        .bg-danger {
+            background-color: #ff0000 !important;
+            color: #ffffff !important;
+        }
+        .bg-primary {
+            background-color: #4fc3f7 !important;
+            color: #000000 !important;
+        }
+        .bg-secondary {
+            background-color: #001d3d !important;
+            color: #4fc3f7 !important;
+        }
+        .bg-light {
+            background-color: #001d3d !important;
+            color: #ffffff !important;
+        }
+        .accordion-button {
+            background: #001d3d !important;
+            color: #ffffff !important;
+            border: 1px solid #4fc3f7 !important;
+        }
+        .accordion-button:not(.collapsed) {
+            background: #003566 !important;
+            color: #4fc3f7 !important;
+            border-color: #81d4fa !important;
+            box-shadow: 0 0 10px rgba(79, 195, 247, 0.3) !important;
+        }
+        .accordion-body {
+            background: #000814 !important;
+            color: #ffffff !important;
+            border: 1px solid #4fc3f7 !important;
+        }
+        .accordion-item {
+            background: #000814 !important;
+            border: 1px solid #4fc3f7 !important;
+            margin-bottom: 0.5rem !important;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            color: #4fc3f7;
+        }
+        strong {
+            color: #81d4fa;
+        }
+        code {
+            background: #000000;
+            color: #4fc3f7;
+            border: 1px solid #4fc3f7;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .text-muted {
+            color: #8b0000 !important;
         }
     </style>
 </head>
@@ -193,6 +284,12 @@
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="btn-group no-print" role="group">
+                        <button onclick="exportToCSV()" class="btn btn-success">
+                            <i class="fas fa-file-csv"></i> CSV
+                        </button>
+                        <button onclick="exportToJSON()" class="btn btn-info">
+                            <i class="fas fa-file-code"></i> JSON
+                        </button>
                         <button onclick="window.print()" class="btn btn-light">
                             <i class="fas fa-print"></i> Print
                         </button>
@@ -313,6 +410,11 @@
                         </button>
                     </li>
                     {% endif %}
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="checks-tab" data-bs-toggle="tab" data-bs-target="#checks-pane" type="button" role="tab">
+                            <i class="fas fa-clipboard-check"></i> Checks
+                        </button>
+                    </li>
                 </ul>
 
                 <div class="tab-content" id="securityTabsContent">
@@ -322,80 +424,473 @@
                     {% if ssl %}
                     <div class="tab-pane fade show active" id="ssl-pane" role="tabpanel">
                         <div class="row">
-                            <div class="col-md-6">
-                                <h6>Overall Status</h6>
-                                <span class="badge fs-6 
-                                    {% if ssl.status == 'excellent' %}bg-success
-                                    {% elif ssl.status == 'good' %}bg-info
-                                    {% elif ssl.status == 'acceptable' or ssl.status == 'moderate' %}bg-warning
-                                    {% else %}bg-danger{% endif %}">
-                                    {{ ssl.status | replace('_', ' ') | title }}
-                                </span>
-                                <p class="text-muted mt-2">{{ ssl.checks_performed }} security checks performed</p>
-
-                                {% if ssl.certificate_info %}
-                                <h6 class="mt-3">Certificate Information</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-sm">
-                                        <tr><td><strong>Subject:</strong></td><td>{{ ssl.certificate_info.subject.get('commonName', 'N/A') }}</td></tr>
-                                        <tr><td><strong>Issuer:</strong></td><td>{{ ssl.certificate_info.issuer.get('organizationName', 'N/A') }}</td></tr>
-                                        <tr><td><strong>Valid Until:</strong></td><td>{{ ssl.certificate_info.not_after }}</td></tr>
-                                        <tr><td><strong>Days to Expiry:</strong></td>
-                                            <td>
-                                                <span class="badge 
-                                                    {% if ssl.certificate_info.expiry_days < 0 %}bg-danger
-                                                    {% elif ssl.certificate_info.expiry_days < 30 %}bg-warning
-                                                    {% else %}bg-success{% endif %}">
-                                                    {{ ssl.certificate_info.expiry_days }} days
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        <tr><td><strong>Key Size:</strong></td><td>{{ ssl.certificate_info.key_size | default('Unknown') }} bits</td></tr>
-                                    </table>
-                                </div>
-                                {% endif %}
-                            </div>
-                            <div class="col-md-6">
-                                {% if ssl.modern_crypto_status %}
-                                <h6>Modern Cryptography Score</h6>
-                                <div class="progress mb-2" style="height: 25px;">
-                                    <div class="progress-bar 
-                                        {% if ssl.modern_crypto_status.overall_score >= 80 %}bg-success
-                                        {% elif ssl.modern_crypto_status.overall_score >= 60 %}bg-info
-                                        {% elif ssl.modern_crypto_status.overall_score >= 40 %}bg-warning
-                                        {% else %}bg-danger{% endif %}" 
-                                        role="progressbar" 
-                                        style="width: {{ ssl.modern_crypto_status.overall_score }}%">
-                                        {{ "%.1f"|format(ssl.modern_crypto_status.overall_score) }}%
-                                    </div>
-                                </div>
-                                {% endif %}
-
-                                {% if ssl.security_features %}
-                                <h6>Security Features</h6>
-                                <div class="mb-3">
-                                    {% for feature, enabled in ssl.security_features.items() %}
-                                    {% if enabled %}
-                                    <span class="badge bg-success me-1 mb-1">
-                                        <i class="fas fa-check"></i> {{ feature | replace('_', ' ') | title }}
+                            <div class="col-md-12">
+                                <h6>Overall SSL/TLS Status</h6>
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="badge fs-6 me-3
+                                        {% if ssl.status == 'excellent' %}bg-success
+                                        {% elif ssl.status == 'good' %}bg-info
+                                        {% elif ssl.status == 'acceptable' or ssl.status == 'moderate' %}bg-warning
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ ssl.status | replace('_', ' ') | title }}
                                     </span>
-                                    {% endif %}
-                                    {% endfor %}
+                                    <span class="text-muted">{{ ssl.checks_performed }} security checks performed</span>
                                 </div>
-                                {% endif %}
-
-                                {% if ssl.ssl_issues %}
-                                <h6>Issues Found</h6>
-                                <div class="alert alert-warning">
-                                    <ul class="mb-0">
-                                        {% for issue in ssl.ssl_issues %}
-                                        <li>{{ issue }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                </div>
-                                {% endif %}
                             </div>
                         </div>
+
+                        <!-- Cipher Suite Analysis -->
+                        {% if ssl.cipher_analysis %}
+                        <div class="accordion mb-4" id="sslAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="cipherHeading">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#cipherCollapse">
+                                        <i class="fas fa-key me-2"></i>
+                                        <strong>Cipher Suite Analysis</strong>
+                                        <span class="badge ms-2
+                                            {% if ssl.cipher_analysis.security_level == 'excellent' %}bg-success
+                                            {% elif ssl.cipher_analysis.security_level == 'good' %}bg-info
+                                            {% elif ssl.cipher_analysis.security_level == 'acceptable' %}bg-warning
+                                            {% else %}bg-danger{% endif %}">
+                                            {{ ssl.cipher_analysis.security_level | title }}
+                                        </span>
+                                    </button>
+                                </h2>
+                                <div id="cipherCollapse" class="accordion-collapse collapse show">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6><i class="fas fa-info-circle"></i> Basic Information</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Cipher Suite:</strong></td><td><code>{{ ssl.cipher_analysis.cipher_suite }}</code></td></tr>
+                                                        <tr><td><strong>TLS Version:</strong></td><td><span class="badge bg-primary">{{ ssl.cipher_analysis.tls_version }}</span></td></tr>
+                                                        <tr><td><strong>Key Size:</strong></td><td>{{ ssl.cipher_analysis.key_bits }} bits</td></tr>
+                                                        <tr><td><strong>Security Level:</strong></td>
+                                                            <td>
+                                                                <span class="badge
+                                                                    {% if ssl.cipher_analysis.security_level == 'excellent' %}bg-success
+                                                                    {% elif ssl.cipher_analysis.security_level == 'good' %}bg-info
+                                                                    {% elif ssl.cipher_analysis.security_level == 'acceptable' %}bg-warning
+                                                                    {% else %}bg-danger{% endif %}">
+                                                                    {{ ssl.cipher_analysis.security_level | title }}
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td><strong>Forward Secrecy:</strong></td>
+                                                            <td>
+                                                                {% if ssl.cipher_analysis.forward_secrecy %}
+                                                                <span class="badge bg-success"><i class="fas fa-check"></i> Yes</span>
+                                                                {% else %}
+                                                                <span class="badge bg-danger"><i class="fas fa-times"></i> No</span>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td><strong>AEAD Cipher:</strong></td>
+                                                            <td>
+                                                                {% if ssl.cipher_analysis.aead_cipher %}
+                                                                <span class="badge bg-success"><i class="fas fa-check"></i> Yes</span>
+                                                                {% else %}
+                                                                <span class="badge bg-warning"><i class="fas fa-times"></i> No</span>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.cipher_details %}
+                                                <h6><i class="fas fa-shield-alt"></i> Cipher Details</h6>
+                                                <div class="alert alert-info">
+                                                    <p><strong>Category:</strong> {{ ssl.cipher_analysis.cipher_details.category }}</p>
+                                                    <p><strong>Recommended Use:</strong> {{ ssl.cipher_analysis.cipher_details.recommended_use }}</p>
+                                                    {% if ssl.cipher_analysis.cipher_details.security_notes %}
+                                                    <p class="mb-0"><strong>Notes:</strong></p>
+                                                    <ul class="mb-0">
+                                                        {% for note in ssl.cipher_analysis.cipher_details.security_notes %}
+                                                        <li>{{ note }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    {% endif %}
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <!-- Detailed Algorithm Analysis -->
+                                        <div class="row mt-4">
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.key_exchange %}
+                                                <h6><i class="fas fa-exchange-alt"></i> Key Exchange</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Algorithm:</strong></td><td>{{ ssl.cipher_analysis.key_exchange.algorithm }}</td></tr>
+                                                        <tr><td><strong>Type:</strong></td><td>{{ ssl.cipher_analysis.key_exchange.type }}</td></tr>
+                                                        <tr><td><strong>Strength:</strong></td><td><span class="badge bg-secondary">{{ ssl.cipher_analysis.key_exchange.strength }}</span></td></tr>
+                                                        <tr><td><strong>Forward Secrecy:</strong></td>
+                                                            <td>
+                                                                {% if ssl.cipher_analysis.key_exchange.forward_secrecy %}
+                                                                <span class="badge bg-success"><i class="fas fa-check"></i> Yes</span>
+                                                                {% else %}
+                                                                <span class="badge bg-danger"><i class="fas fa-times"></i> No</span>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </div>
+                                                {% if ssl.cipher_analysis.key_exchange.notes %}
+                                                <div class="alert alert-light">
+                                                    <small>
+                                                        {% for note in ssl.cipher_analysis.key_exchange.notes %}
+                                                        <div>• {{ note }}</div>
+                                                        {% endfor %}
+                                                    </small>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.encryption %}
+                                                <h6><i class="fas fa-lock"></i> Encryption Algorithm</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Algorithm:</strong></td><td>{{ ssl.cipher_analysis.encryption.algorithm }}</td></tr>
+                                                        <tr><td><strong>Type:</strong></td><td>{{ ssl.cipher_analysis.encryption.type }}</td></tr>
+                                                        <tr><td><strong>Key Size:</strong></td><td>{{ ssl.cipher_analysis.encryption.key_size }}</td></tr>
+                                                        {% if ssl.cipher_analysis.encryption.block_size != 'unknown' %}
+                                                        <tr><td><strong>Block Size:</strong></td><td>{{ ssl.cipher_analysis.encryption.block_size }}</td></tr>
+                                                        {% endif %}
+                                                        {% if ssl.cipher_analysis.encryption.mode != 'unknown' %}
+                                                        <tr><td><strong>Mode:</strong></td><td>{{ ssl.cipher_analysis.encryption.mode }}</td></tr>
+                                                        {% endif %}
+                                                        <tr><td><strong>Strength:</strong></td><td><span class="badge bg-secondary">{{ ssl.cipher_analysis.encryption.strength }}</span></td></tr>
+                                                    </table>
+                                                </div>
+                                                {% if ssl.cipher_analysis.encryption.notes %}
+                                                <div class="alert alert-light">
+                                                    <small>
+                                                        {% for note in ssl.cipher_analysis.encryption.notes %}
+                                                        <div>• {{ note }}</div>
+                                                        {% endfor %}
+                                                    </small>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3">
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.authentication %}
+                                                <h6><i class="fas fa-user-check"></i> Authentication</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Algorithm:</strong></td><td>{{ ssl.cipher_analysis.authentication.algorithm }}</td></tr>
+                                                        <tr><td><strong>Type:</strong></td><td>{{ ssl.cipher_analysis.authentication.type }}</td></tr>
+                                                        <tr><td><strong>Strength:</strong></td><td><span class="badge bg-secondary">{{ ssl.cipher_analysis.authentication.strength }}</span></td></tr>
+                                                    </table>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.mac_algorithm %}
+                                                <h6><i class="fas fa-fingerprint"></i> MAC Algorithm</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Algorithm:</strong></td><td>{{ ssl.cipher_analysis.mac_algorithm.algorithm }}</td></tr>
+                                                        <tr><td><strong>Type:</strong></td><td>{{ ssl.cipher_analysis.mac_algorithm.type }}</td></tr>
+                                                        {% if ssl.cipher_analysis.mac_algorithm.hash_size != 'unknown' %}
+                                                        <tr><td><strong>Hash Size:</strong></td><td>{{ ssl.cipher_analysis.mac_algorithm.hash_size }}</td></tr>
+                                                        {% endif %}
+                                                        <tr><td><strong>Strength:</strong></td><td><span class="badge bg-secondary">{{ ssl.cipher_analysis.mac_algorithm.strength }}</span></td></tr>
+                                                    </table>
+                                                </div>
+                                                {% if ssl.cipher_analysis.mac_algorithm.notes %}
+                                                <div class="alert alert-light">
+                                                    <small>
+                                                        {% for note in ssl.cipher_analysis.mac_algorithm.notes %}
+                                                        <div>• {{ note }}</div>
+                                                        {% endfor %}
+                                                    </small>
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Protocol Analysis -->
+                            {% if ssl.protocol_details %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="protocolHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#protocolCollapse">
+                                        <i class="fas fa-network-wired me-2"></i>
+                                        <strong>Protocol Analysis: {{ ssl.protocol_details.version }}</strong>
+                                        <span class="badge ms-2
+                                            {% if ssl.protocol_details.status == 'Current' %}bg-success
+                                            {% elif ssl.protocol_details.status == 'Deprecated' %}bg-danger
+                                            {% else %}bg-warning{% endif %}">
+                                            {{ ssl.protocol_details.status }}
+                                        </span>
+                                    </button>
+                                </h2>
+                                <div id="protocolCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Protocol Information</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Version:</strong></td><td>{{ ssl.protocol_details.version }}</td></tr>
+                                                        <tr><td><strong>Release Year:</strong></td><td>{{ ssl.protocol_details.release_year }}</td></tr>
+                                                        <tr><td><strong>Status:</strong></td><td><span class="badge bg-secondary">{{ ssl.protocol_details.status }}</span></td></tr>
+                                                        <tr><td><strong>Compatibility:</strong></td><td>{{ ssl.protocol_details.compatibility }}</td></tr>
+                                                    </table>
+                                                </div>
+                                                <div class="alert 
+                                                    {% if ssl.protocol_details.status == 'Current' %}alert-success
+                                                    {% elif ssl.protocol_details.status == 'Deprecated' %}alert-danger
+                                                    {% else %}alert-warning{% endif %}">
+                                                    <strong>Recommendation:</strong> {{ ssl.protocol_details.recommendation }}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.protocol_details.features %}
+                                                <h6>Features</h6>
+                                                <ul>
+                                                    {% for feature in ssl.protocol_details.features %}
+                                                    <li>{{ feature }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
+                                                
+                                                {% if ssl.protocol_details.security_improvements %}
+                                                <h6>Security Improvements</h6>
+                                                <ul class="text-success">
+                                                    {% for improvement in ssl.protocol_details.security_improvements %}
+                                                    <li>{{ improvement }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Certificate Information -->
+                            {% if ssl.certificate_info %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="certHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#certCollapse">
+                                        <i class="fas fa-certificate me-2"></i>
+                                        <strong>Certificate Information</strong>
+                                        <span class="badge ms-2
+                                            {% if ssl.certificate_info.expiry_days < 0 %}bg-danger
+                                            {% elif ssl.certificate_info.expiry_days < 30 %}bg-warning
+                                            {% else %}bg-success{% endif %}">
+                                            {{ ssl.certificate_info.expiry_days }} days to expiry
+                                        </span>
+                                    </button>
+                                </h2>
+                                <div id="certCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Certificate Details</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>Subject:</strong></td><td>{{ ssl.certificate_info.subject.get('commonName', 'N/A') }}</td></tr>
+                                                        <tr><td><strong>Issuer:</strong></td><td>{{ ssl.certificate_info.issuer.get('organizationName', 'N/A') }}</td></tr>
+                                                        <tr><td><strong>Valid From:</strong></td><td>{{ ssl.certificate_info.not_before }}</td></tr>
+                                                        <tr><td><strong>Valid Until:</strong></td><td>{{ ssl.certificate_info.not_after }}</td></tr>
+                                                        <tr><td><strong>Days to Expiry:</strong></td>
+                                                            <td>
+                                                                <span class="badge 
+                                                                    {% if ssl.certificate_info.expiry_days < 0 %}bg-danger
+                                                                    {% elif ssl.certificate_info.expiry_days < 30 %}bg-warning
+                                                                    {% else %}bg-success{% endif %}">
+                                                                    {{ ssl.certificate_info.expiry_days }} days
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                        <tr><td><strong>Key Algorithm:</strong></td><td>{{ ssl.certificate_info.key_algorithm | default('Unknown') }}</td></tr>
+                                                        <tr><td><strong>Key Size:</strong></td><td>{{ ssl.certificate_info.key_size | default('Unknown') }} bits</td></tr>
+                                                        <tr><td><strong>Signature Algorithm:</strong></td><td>{{ ssl.certificate_info.signature_algorithm | default('Unknown') }}</td></tr>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.certificate_info.subject_alt_names %}
+                                                <h6>Subject Alternative Names</h6>
+                                                <div class="alert alert-light">
+                                                    {% for san in ssl.certificate_info.subject_alt_names %}
+                                                    <span class="badge bg-light text-dark me-1 mb-1">{{ san }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                
+                                                {% if ssl.certificate_info.chain_length %}
+                                                <h6>Certificate Chain</h6>
+                                                <p><strong>Chain Length:</strong> {{ ssl.certificate_info.chain_length }} certificates</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Compliance & Standards -->
+                            {% if ssl.cipher_analysis.nist_approved or ssl.cipher_analysis.deprecation_status %}
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="complianceHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#complianceCollapse">
+                                        <i class="fas fa-clipboard-check me-2"></i>
+                                        <strong>Compliance & Standards</strong>
+                                        {% if ssl.cipher_analysis.nist_approved.approved %}
+                                        <span class="badge bg-success ms-2">NIST Approved</span>
+                                        {% endif %}
+                                        {% if ssl.cipher_analysis.deprecation_status.cipher_deprecated or ssl.cipher_analysis.deprecation_status.protocol_deprecated %}
+                                        <span class="badge bg-warning ms-1">Has Deprecated Components</span>
+                                        {% endif %}
+                                    </button>
+                                </h2>
+                                <div id="complianceCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.nist_approved %}
+                                                <h6>NIST Compliance</h6>
+                                                <div class="table-responsive">
+                                                    <table class="table table-sm">
+                                                        <tr><td><strong>NIST Approved:</strong></td>
+                                                            <td>
+                                                                {% if ssl.cipher_analysis.nist_approved.approved %}
+                                                                <span class="badge bg-success"><i class="fas fa-check"></i> Yes</span>
+                                                                {% else %}
+                                                                <span class="badge bg-danger"><i class="fas fa-times"></i> No</span>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                        {% if ssl.cipher_analysis.nist_approved.category != 'unknown' %}
+                                                        <tr><td><strong>Category:</strong></td><td>{{ ssl.cipher_analysis.nist_approved.category }}</td></tr>
+                                                        {% endif %}
+                                                    </table>
+                                                </div>
+                                                {% if ssl.cipher_analysis.nist_approved.compliance %}
+                                                <div class="alert alert-info">
+                                                    <strong>Standards:</strong>
+                                                    {% for standard in ssl.cipher_analysis.nist_approved.compliance %}
+                                                    <span class="badge bg-primary me-1">{{ standard }}</span>
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.cipher_analysis.deprecation_status %}
+                                                <h6>Deprecation Status</h6>
+                                                {% if ssl.cipher_analysis.deprecation_status.warnings %}
+                                                <div class="alert 
+                                                    {% if ssl.cipher_analysis.deprecation_status.urgency == 'critical' %}alert-danger
+                                                    {% elif ssl.cipher_analysis.deprecation_status.urgency == 'high' %}alert-warning
+                                                    {% else %}alert-info{% endif %}">
+                                                    {% for warning in ssl.cipher_analysis.deprecation_status.warnings %}
+                                                    <div>{{ warning }}</div>
+                                                    {% endfor %}
+                                                    {% if ssl.cipher_analysis.deprecation_status.replacement_recommended %}
+                                                    <div class="mt-2"><strong>Recommended:</strong> {{ ssl.cipher_analysis.deprecation_status.replacement_recommended }}</div>
+                                                    {% endif %}
+                                                </div>
+                                                {% else %}
+                                                <div class="alert alert-success">
+                                                    <i class="fas fa-check"></i> No deprecated components detected
+                                                </div>
+                                                {% endif %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Security Features and Issues -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="securityHeading">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#securityCollapse">
+                                        <i class="fas fa-shield-alt me-2"></i>
+                                        <strong>Security Features & Issues</strong>
+                                        {% if ssl.ssl_issues %}
+                                        <span class="badge bg-warning ms-2">{{ ssl.ssl_issues|length }} Issues</span>
+                                        {% endif %}
+                                    </button>
+                                </h2>
+                                <div id="securityCollapse" class="accordion-collapse collapse">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                {% if ssl.security_features %}
+                                                <h6>Security Features Enabled</h6>
+                                                <div class="mb-3">
+                                                    {% for feature, enabled in ssl.security_features.items() %}
+                                                    {% if enabled %}
+                                                    <span class="badge bg-success me-1 mb-1">
+                                                        <i class="fas fa-check"></i> {{ feature | replace('_', ' ') | title }}
+                                                    </span>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                {% endif %}
+
+                                                {% if ssl.modern_crypto_status %}
+                                                <h6>Modern Cryptography Score</h6>
+                                                <div class="progress mb-2" style="height: 25px;">
+                                                    <div class="progress-bar 
+                                                        {% if ssl.modern_crypto_status.overall_score >= 80 %}bg-success
+                                                        {% elif ssl.modern_crypto_status.overall_score >= 60 %}bg-info
+                                                        {% elif ssl.modern_crypto_status.overall_score >= 40 %}bg-warning
+                                                        {% else %}bg-danger{% endif %}" 
+                                                        role="progressbar" 
+                                                        style="width: {{ ssl.modern_crypto_status.overall_score }}%">
+                                                        {{ "%.1f"|format(ssl.modern_crypto_status.overall_score) }}%
+                                                    </div>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-6">
+                                                {% if ssl.ssl_issues %}
+                                                <h6>Issues Found</h6>
+                                                <div class="alert alert-warning">
+                                                    <ul class="mb-0">
+                                                        {% for issue in ssl.ssl_issues %}
+                                                        <li>{{ issue }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                {% endif %}
+
+                                                {% if ssl.recommendations %}
+                                                <h6>Recommendations</h6>
+                                                <div class="alert alert-info">
+                                                    <ul class="mb-0">
+                                                        {% for rec in ssl.recommendations %}
+                                                        <li>{{ rec }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                     {% endif %}
 
@@ -942,6 +1437,311 @@
                         </div>
                     </div>
                     {% endif %}
+
+                    <!-- Checks Tab -->
+                    <div class="tab-pane fade" id="checks-pane" role="tabpanel">
+                        <h5 class="mb-4"><i class="fas fa-clipboard-check"></i> Security Checks Performed</h5>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 5%;">#</th>
+                                        <th style="width: 35%;">Check Name</th>
+                                        <th style="width: 25%;">Category</th>
+                                        <th style="width: 15%;">Status</th>
+                                        <th style="width: 20%;">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% set check_counter = {'count': 0} %}
+                                    
+                                    <!-- SSL/TLS Checks -->
+                                    {% if results.scans.ssl_tls_analysis %}
+                                    {% set ssl = results.scans.ssl_tls_analysis %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>HTTPS Enabled</td>
+                                        <td><span class="badge bg-primary">SSL/TLS</span></td>
+                                        <td>
+                                            {% if ssl.ssl_enabled %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Fail</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ 'HTTPS active' if ssl.ssl_enabled else 'No HTTPS detected' }}</td>
+                                    </tr>
+                                    
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>Valid SSL Certificate</td>
+                                        <td><span class="badge bg-primary">SSL/TLS</span></td>
+                                        <td>
+                                            {% if ssl.certificate_valid %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Fail</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ ssl.certificate_issuer if ssl.certificate_issuer else 'Certificate issue detected' }}</td>
+                                    </tr>
+                                    
+                                    {% if ssl.tls_version %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>TLS Version Check</td>
+                                        <td><span class="badge bg-primary">SSL/TLS</span></td>
+                                        <td>
+                                            {% if ssl.tls_version in ['TLSv1.2', 'TLSv1.3'] %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-warning"><i class="fas fa-exclamation-triangle"></i> Warning</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ ssl.tls_version }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    
+                                    {% if ssl.cipher_suite %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>Strong Cipher Suite</td>
+                                        <td><span class="badge bg-primary">SSL/TLS</span></td>
+                                        <td>
+                                            {% if 'AES' in ssl.cipher_suite or 'CHACHA20' in ssl.cipher_suite %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-warning"><i class="fas fa-exclamation-triangle"></i> Warning</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ ssl.cipher_suite[:50] }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endif %}
+                                    
+                                    <!-- Security Headers Checks -->
+                                    {% if results.scans.security_headers %}
+                                    {% set headers_data = results.scans.security_headers %}
+                                    {% if headers_data.headers_present %}
+                                    {% for header_name, header_info in headers_data.headers_present.items() %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>{{ header_name }}</td>
+                                        <td><span class="badge bg-info">Security Headers</span></td>
+                                        <td>
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                        </td>
+                                        <td>{{ header_info.value[:50] if header_info.value else 'Configured' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% if headers_data.headers_missing %}
+                                    {% for header_name in headers_data.headers_missing %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>{{ header_name }}</td>
+                                        <td><span class="badge bg-info">Security Headers</span></td>
+                                        <td>
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Fail</span>
+                                        </td>
+                                        <td>Not configured</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endif %}
+                                    
+                                    <!-- Port Security Checks -->
+                                    {% if results.scans.port_scanning %}
+                                    {% set ports = results.scans.port_scanning %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>Standard HTTPS Port (443)</td>
+                                        <td><span class="badge bg-warning">Port Scanning</span></td>
+                                        <td>
+                                            {% if ports.open_ports and 443 in ports.open_ports %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-warning"><i class="fas fa-exclamation-triangle"></i> Check</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ 'Port 443 open' if ports.open_ports and 443 in ports.open_ports else 'Port status unknown' }}</td>
+                                    </tr>
+                                    
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>Unnecessary Open Ports</td>
+                                        <td><span class="badge bg-warning">Port Scanning</span></td>
+                                        <td>
+                                            {% set risky_ports = [21, 23, 25, 110, 143, 3306, 5432, 27017] %}
+                                            {% set has_risky = namespace(value=false) %}
+                                            {% if ports.open_ports %}
+                                                {% for port in ports.open_ports %}
+                                                    {% if port in risky_ports %}
+                                                        {% set has_risky.value = true %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endif %}
+                                            {% if has_risky.value %}
+                                            <span class="badge bg-warning"><i class="fas fa-exclamation-triangle"></i> Warning</span>
+                                            {% else %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ ports.open_ports|length if ports.open_ports else 0 }} ports detected</td>
+                                    </tr>
+                                    {% endif %}
+                                    
+                                    <!-- DNS Security Checks -->
+                                    {% if results.scans.dns_information %}
+                                    {% set dns = results.scans.dns_information %}
+                                    
+                                    {% if dns.email_security %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>SPF Record Configured</td>
+                                        <td><span class="badge bg-secondary">DNS/Email</span></td>
+                                        <td>
+                                            {% if dns.email_security.spf_record %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Fail</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ 'SPF configured' if dns.email_security.spf_record else 'No SPF record' }}</td>
+                                    </tr>
+                                    
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>DMARC Record Configured</td>
+                                        <td><span class="badge bg-secondary">DNS/Email</span></td>
+                                        <td>
+                                            {% if dns.email_security.dmarc_record %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% else %}
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Fail</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ 'DMARC configured' if dns.email_security.dmarc_record else 'No DMARC record' }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endif %}
+                                    
+                                    <!-- Server Configuration Checks -->
+                                    {% if results.scans.server_analysis %}
+                                    {% set server = results.scans.server_analysis %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>Server Header Disclosure</td>
+                                        <td><span class="badge bg-light">Server Config</span></td>
+                                        <td>
+                                            {% if server.server_header %}
+                                            <span class="badge bg-warning"><i class="fas fa-exclamation-triangle"></i> Info Leak</span>
+                                            {% else %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ server.server_header if server.server_header else 'Header hidden' }}</td>
+                                    </tr>
+                                    
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>X-Powered-By Header</td>
+                                        <td><span class="badge bg-light">Server Config</span></td>
+                                        <td>
+                                            {% if server.powered_by %}
+                                            <span class="badge bg-warning"><i class="fas fa-exclamation-triangle"></i> Info Leak</span>
+                                            {% else %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ server.powered_by if server.powered_by else 'Header removed' }}</td>
+                                    </tr>
+                                    {% endif %}
+                                    
+                                    <!-- Vulnerability Checks -->
+                                    {% if results.scans.vulnerability_testing %}
+                                    {% set vulns = results.scans.vulnerability_testing %}
+                                    {% if vulns.tests_performed %}
+                                    {% for test_name in vulns.tests_performed %}
+                                    {% set _ = check_counter.update({'count': check_counter.count + 1}) %}
+                                    {% set is_vulnerable = namespace(value=false) %}
+                                    {% if vulns.vulnerabilities %}
+                                        {% for vuln in vulns.vulnerabilities %}
+                                            {% if test_name in vuln.type or vuln.type in test_name %}
+                                                {% set is_vulnerable.value = true %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                    <tr>
+                                        <td>{{ check_counter.count }}</td>
+                                        <td>{{ test_name }}</td>
+                                        <td><span class="badge bg-danger">Vulnerability</span></td>
+                                        <td>
+                                            {% if is_vulnerable.value %}
+                                            <span class="badge bg-danger"><i class="fas fa-times-circle"></i> Vulnerable</span>
+                                            {% else %}
+                                            <span class="badge bg-success"><i class="fas fa-check-circle"></i> Pass</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ 'Vulnerability detected' if is_vulnerable.value else 'No issues found' }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endif %}
+                                    {% endif %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-12">
+                                <div class="alert alert-info">
+                                    <h6><i class="fas fa-info-circle"></i> Checks Summary</h6>
+                                    <p class="mb-2">
+                                        <strong>Primary Security Checks Displayed:</strong> {{ check_counter.count }}<br>
+                                        <small>These are the main security controls evaluated in this report, showing pass/fail status for each.</small>
+                                    </p>
+                                    <p class="mb-2 text-muted">
+                                        <strong>Total Internal Checks Performed:</strong> {{ results.scan_metadata.total_checks }}<br>
+                                        <small>This includes all detailed sub-checks across all scan modules:</small>
+                                    </p>
+                                    <ul class="small text-muted mb-3">
+                                        <li>SSL/TLS: Certificate validation, cipher strength analysis, protocol version checks, vulnerability scans</li>
+                                        <li>Security Headers: Individual evaluation of 10+ HTTP security headers</li>
+                                        <li>Vulnerabilities: SQL injection, XSS, directory traversal, sensitive file exposure tests</li>
+                                        <li>DNS: SPF, DMARC, DKIM records, nameserver validation</li>
+                                        <li>Network: Port scanning, service detection, open port analysis</li>
+                                        <li>Cookies: Secure, HttpOnly, SameSite attribute verification</li>
+                                        <li>CORS: Cross-origin policy validation</li>
+                                    </ul>
+                                    <hr class="my-2">
+                                    <p class="mb-1 mt-2"><strong>Status Indicators:</strong></p>
+                                    <p class="mb-0">
+                                        <span class="badge bg-success me-2"><i class="fas fa-check-circle"></i> Pass</span> - Security control properly implemented
+                                    </p>
+                                    <p class="mb-0 mt-1">
+                                        <span class="badge bg-danger me-2"><i class="fas fa-times-circle"></i> Fail</span> - Security control missing or improperly configured
+                                    </p>
+                                    <p class="mb-0 mt-1">
+                                        <span class="badge bg-warning me-2"><i class="fas fa-exclamation-triangle"></i> Warning</span> - Potential security concern requiring review
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -965,5 +1765,113 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Export data object
+        const scanData = {{ results | tojson | safe }};
+        
+        function exportToJSON() {
+            const dataStr = JSON.stringify(scanData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `security_report_${scanData.domain}_${scanData.timestamp.split('T')[0]}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+        
+        function exportToCSV() {
+            let csv = '';
+            
+            // Header
+            csv += 'WebVectors Security Report\n';
+            csv += `Target URL,${scanData.target_url}\n`;
+            csv += `Domain,${scanData.domain}\n`;
+            csv += `Scan Date,${scanData.timestamp}\n`;
+            csv += `Scan ID,${scanData.scan_id}\n\n`;
+            
+            // Summary metrics
+            csv += 'Summary Metrics\n';
+            csv += 'Metric,Count\n';
+            csv += `Critical Issues,${scanData.scan_metadata.critical_issues}\n`;
+            csv += `High Priority Issues,${scanData.scan_metadata.high_issues}\n`;
+            csv += `Medium Priority Issues,${scanData.scan_metadata.medium_issues}\n`;
+            csv += `Low Priority Issues,${scanData.scan_metadata.low_issues}\n`;
+            csv += `Total Checks,${scanData.scan_metadata.total_checks}\n`;
+            csv += `Scan Duration,${scanData.scan_metadata.scan_duration}s\n\n`;
+            
+            // SSL/TLS Information
+            if (scanData.ssl_analysis) {
+                csv += 'SSL/TLS Analysis\n';
+                csv += 'Property,Value\n';
+                csv += `SSL Enabled,${scanData.ssl_analysis.ssl_enabled}\n`;
+                csv += `Certificate Valid,${scanData.ssl_analysis.certificate_valid}\n`;
+                csv += `Certificate Issuer,${scanData.ssl_analysis.certificate_issuer || 'N/A'}\n`;
+                csv += `Certificate Expiry,${scanData.ssl_analysis.certificate_expiry || 'N/A'}\n`;
+                csv += `Days Until Expiry,${scanData.ssl_analysis.days_until_expiry || 'N/A'}\n`;
+                csv += `TLS Version,${scanData.ssl_analysis.tls_version || 'N/A'}\n`;
+                csv += `Cipher Suite,${scanData.ssl_analysis.cipher_suite || 'N/A'}\n\n`;
+            }
+            
+            // Security Headers
+            if (scanData.security_headers) {
+                csv += 'Security Headers\n';
+                csv += 'Header,Status,Value\n';
+                for (const [header, info] of Object.entries(scanData.security_headers)) {
+                    const status = info.present ? 'Present' : 'Missing';
+                    const value = info.value ? info.value.replace(/,/g, ';') : 'N/A';
+                    csv += `${header},${status},"${value}"\n`;
+                }
+                csv += '\n';
+            }
+            
+            // All Issues
+            if (scanData.all_issues && scanData.all_issues.length > 0) {
+                csv += 'Security Issues\n';
+                csv += 'Severity,Type,Description,Impact,Remediation\n';
+                scanData.all_issues.forEach(issue => {
+                    const desc = (issue.description || '').replace(/"/g, '""').replace(/,/g, ';');
+                    const impact = (issue.impact || '').replace(/"/g, '""').replace(/,/g, ';');
+                    const remediation = (issue.remediation || '').replace(/"/g, '""').replace(/,/g, ';');
+                    csv += `${issue.severity},"${issue.type}","${desc}","${impact}","${remediation}"\n`;
+                });
+                csv += '\n';
+            }
+            
+            // HTTP Headers
+            if (scanData.http_headers) {
+                csv += 'HTTP Response Headers\n';
+                csv += 'Header,Value\n';
+                for (const [header, value] of Object.entries(scanData.http_headers)) {
+                    const cleanValue = (value || '').replace(/"/g, '""').replace(/,/g, ';');
+                    csv += `${header},"${cleanValue}"\n`;
+                }
+                csv += '\n';
+            }
+            
+            // Technologies
+            if (scanData.technologies_detected && scanData.technologies_detected.length > 0) {
+                csv += 'Technologies Detected\n';
+                csv += 'Technology,Category,Version,Confidence\n';
+                scanData.technologies_detected.forEach(tech => {
+                    csv += `${tech.name},${tech.category || 'N/A'},${tech.version || 'N/A'},${tech.confidence || 'N/A'}\n`;
+                });
+            }
+            
+            // Create and download
+            const dataBlob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `security_report_${scanData.domain}_${scanData.timestamp.split('T')[0]}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
 </html>
