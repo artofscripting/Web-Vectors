@@ -4,11 +4,13 @@ A comprehensive Python-based website security scanner with both CLI and web inte
 
 ![Security Scanner](https://img.shields.io/badge/Security-Scanner-blue) ![Python](https://img.shields.io/badge/Python-3.7+-green) ![Flask](https://img.shields.io/badge/Flask-2.3+-orange) ![Version](https://img.shields.io/badge/Version-2.0-brightgreen) ![Database](https://img.shields.io/badge/Database-SQLite-lightblue)
 
-## � Screenshot
+## 📸 Screenshot
 
 ![WebVectors Security Report](assets/Screenshot.png)
 
 *Comprehensive security analysis with detailed SSL/TLS inspection, vulnerability testing, and compliance checking*
+
+![WebVectors Security Report 2](assets/Screenshot2.png)
 
 ## �🚀 Enhanced Features (v2.0)
 
