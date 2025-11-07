@@ -2,7 +2,7 @@
 
 A comprehensive Python-based website security scanner with both CLI and web interface options. This tool performs robust security analysis including SSL/TLS testing, vulnerability assessment, compliance checking, and provides professional security reporting with scoring systems.
 
-![Security Scanner](https://img.shields.io/badge/Security-Scanner-blue) ![Python](https://img.shields.io/badge/Python-3.7+-green) ![Flask](https://img.shields.io/badge/Flask-2.3+-orange) ![Version](https://img.shields.io/badge/Version-2.0-brightgreen) ![Database](https://img.shields.io/badge/Database-SQLite-lightblue)
+![Security Scanner](https://img.shields.io/badge/Security-Scanner-blue) 
 
 ## 📸 Screenshot
 
